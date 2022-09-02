@@ -17,7 +17,14 @@
     "postuninstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.8",
+    "axios": "^0.27.2",
     "einf": "^1.1.1",
+    "monaco-editor": "^0.34.0",
+    "node-plantuml": "^0.9.0",
+    "postcss": "^8.4.16",
+    "tailwindcss": "^3.1.8",
+    "vite-plugin-monaco-editor": "^1.1.0",
     "vue": "^3.2.33"
   },
   "devDependencies": {
