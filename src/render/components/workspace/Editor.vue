@@ -6,14 +6,18 @@ const editorStore = EditorStore()
 const el = ref()
 let edit = null
 onMounted(() => {
-  edit = editor.create(el.value, { automaticLayout: true })
+  edit = editor.create(el.value, { automaticLayout: false, scrollBeyondLastLine: false })
   editorStore.init(edit)
 })
 
 function getValue() {
   return editorStore.getValue()
 }
-defineExpose({ getValue })
+
+function clearAll() {
+  editorStore.clearAll()
+}
+defineExpose({ getValue, clearAll })
 </script>
 
 <template>

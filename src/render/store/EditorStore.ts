@@ -21,6 +21,12 @@ export default defineStore('editor', {
       return this.editor ? toRaw(this.editor).getValue() : ''
     },
     /**
+     * 清空所有数据
+     */
+    clearAll(): void {
+      toRaw(this.editor)?.setValue('')
+    },
+    /**
      * 数据初始化
      */
     init(editor: any) {
