@@ -1,6 +1,4 @@
 import { app } from 'electron'
-import { createEinf } from 'einf'
-import { AppController } from './app.controller'
 import { createWindow } from './main.window'
 import { initEvent } from './event'
 
@@ -35,14 +33,6 @@ async function bootstrap() {
       createWindow()
       initEvent()
     })
-    // await createEinf({
-    //   window: createWindow,
-    //   controllers: [AppController],
-    //   injects: [{
-    //     name: 'IS_DEV',
-    //     inject: !app.isPackaged,
-    //   }],
-    // })
   }
   catch (error) {
     console.error(error)

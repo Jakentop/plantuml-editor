@@ -1,5 +1,5 @@
 import { join } from 'path'
-import { BrowserWindow, app } from 'electron'
+import { BrowserWindow, Menu, MenuItem, app } from 'electron'
 
 const isDev = !app.isPackaged
 
@@ -23,12 +23,18 @@ export async function createWindow() {
     : `file://${join(app.getAppPath(), 'dist/render/index.html')}`
 
   win.loadURL(URL)
-
   if (isDev)
     win.webContents.openDevTools()
 
-  else
-    win.removeMenu()
+  initMenu(win)
+
+  // 拦截渲染器的键盘输入事件
+  win.webContents.on('before-input-event', (_event, input) => {
+    if (input.type === 'keyUp' && input.control && input.key.toLowerCase() === 'enter') {
+      _event.preventDefault()
+      win.webContents.send('vevent:uml:update')
+    }
+  })
 
   win.on('closed', () => {
     win.destroy()
@@ -47,4 +53,25 @@ export async function restoreOrCreateWindow() {
     window.restore()
 
   window.focus()
+}
+
+/**
+ * 初始化界面
+ * @param window windows对象
+ * @returns 返回menu对象
+ */
+function initMenu(window: BrowserWindow): Menu {
+  const menu = new Menu()
+  menu.append(new MenuItem({
+    label: '操作',
+    submenu: [
+      {
+        label: '查询',
+        click: () => window.webContents.send('vevent:uml:update'),
+        accelerator: process.platform === 'darwin' ? 'Cmd+Enter' : 'Ctrl+Enter',
+      },
+    ],
+  }))
+  Menu.setApplicationMenu(menu)
+  return menu
 }

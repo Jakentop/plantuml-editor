@@ -7,8 +7,9 @@ import { ref } from 'vue'
 const value = ref('')
 const editor = ref()
 
-function update() {
-  console.log(editor.value.getValue())
+function update(event?) {
+  console.info(event && null)
+  console.info(editor.value.getValue())
   value.value = editor.value.getValue()
 }
 
@@ -16,6 +17,11 @@ function clearAll() {
   value.value = ''
   editor.value.clearAll()
 }
+
+// 注册Ipc给的事件
+window.electronAPI.onVEventUmlUpdate(() => {
+  update()
+})
 </script>
 
 <template>
@@ -45,7 +51,7 @@ function clearAll() {
       </div>
     </n-layout-header>
     <n-layout-content style="height:94%">
-      <div class="absolute w-full h-full grid grid-cols-2" @keydown.ctrl.enter="update">
+      <div class="absolute w-full h-full grid grid-cols-2">
         <!-- 编辑器 -->
         <Editor ref="editor" class="h-full" />
         <!-- 预览界面 -->
