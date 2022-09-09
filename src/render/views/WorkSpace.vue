@@ -1,7 +1,9 @@
 <!-- eslint-disable no-console -->
 <script setup lang="ts">
+import type { IFileInfo } from '@main/utils'
 import Editor from '@render/components/workspace/Editor.vue'
 import Preview from '@render/components/workspace/Preview.vue'
+import type { IpcRendererEvent } from 'electron'
 import { ref } from 'vue'
 
 const value = ref('')
@@ -21,6 +23,21 @@ function clearAll() {
 // 注册Ipc给的事件
 window.electronAPI.onVEventUmlUpdate(() => {
   update()
+})
+
+// 注册打开文件的事件回调
+window.electronAPI.onVEventRegister('common:openFile', (_event: IpcRendererEvent, file: IFileInfo) => {
+  editor.value.setValue(file)
+  update()
+})
+// 注册保存文件预处理回调
+window.electronAPI.onVEventRegister('common:fileSave:pre', async () => {
+  const data = editor.value.getValue()
+  if (data) {
+    const newPath = await window.electronAPI.commonFileSave(data, editor.value.getCurFilePath())
+    if (newPath !== editor.value.getCurFilePath())
+      editor.value.setCurFilePath(newPath)
+  }
 })
 </script>
 

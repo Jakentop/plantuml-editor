@@ -1,5 +1,6 @@
 import { join } from 'path'
 import { BrowserWindow, Menu, MenuItem, app } from 'electron'
+import { mainEvent } from './event'
 
 const isDev = !app.isPackaged
 
@@ -65,6 +66,16 @@ function initMenu(window: BrowserWindow): Menu {
   menu.append(new MenuItem({
     label: '操作',
     submenu: [
+      {
+        label: '打开',
+        click: () => mainEvent.commonFileOpen(window),
+        accelerator: process.platform === 'darwin' ? 'Cmd+o' : 'Ctrl+o',
+      },
+      {
+        label: '保存',
+        click: () => mainEvent.commonFileSavePre(window),
+        accelerator: process.platform === 'darwin' ? 'Cmd+s' : 'Ctrl+s',
+      },
       {
         label: '查询',
         click: () => window.webContents.send('vevent:uml:update'),
